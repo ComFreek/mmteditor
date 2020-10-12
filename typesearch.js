@@ -7,15 +7,36 @@ typeSearch.addEventListener("input", () => {
     oldTypeResults.parentNode.replaceChild(newTypeResults, oldTypeResults);
 });
 
-function computeTypingInfo(str) {
+/**
+ * Compute information on how a human would type a string using their keyboard
+ * and a possible map of abbreviations.
+ * 
+ * @param {string} str The string
+ * @param {Map<String,String>} abbreviationsRev
+ *      A "reverse" map of `Unicode character |-> abbreviation to type for the user`.
+ * 
+ * @returns {Array<{kind: "typable"|"abbr"|"unknown", text?: string, abbr?: string, character?: string}}
+ *    An array of so-called help items encoding how humans can progressively type `str`.
+ *    Help items of kind "typable" have their `text` property set to the text that humans
+ *    can usually just type on their keyboard. Help items of kind "abbr" have their
+ *    `abbr` proprety set to the abbreviation as found in `abbreviationsRev`.
+ *    Help items of kind "unknown" account for all other characters that can neither be
+ *    typed on (usual) keyboards nor have been found in the abbreviation map. Those
+ *    have their `character` property set to a single Unicode character.
+ */
+function computeTypingInfo(str, abbreviationsRev) {
 	const helpItems = [];
 	let lastWasTypable = false;
 
-	for (let idx = 0; idx < str.length; idx++) {
-        const codepoint = str.codePointAt(idx);
-        // either tab (codepoint 9) or typable ASCII character
-		if (codepoint == 9 || (codepoint >= 32 && codepoint <= 126)) {
-            const text = codepoint == 9 ? "<tab>" : str[idx];
+    // go through all Unicode (!) characters of the string
+	for (const character of str.match(/./ug)) {
+        const firstCodepoint = character.codePointAt(0);
+
+        // case of typable ASCII characters:
+        // either tab (codepoint 9) or non-whitespace ASCII character
+        if (character.length == 1 &&
+            (firstCodepoint == 9 || (firstCodepoint >= 32 && firstCodepoint <= 126))) {
+            const text = firstCodepoint == 9 ? "<tab>" : character;
 			if (lastWasTypable) {
 				const lastHelpItem = helpItems.pop();
 				lastHelpItem.text += text;
@@ -24,21 +45,28 @@ function computeTypingInfo(str) {
 			} else {
 				helpItems.push({kind: "typable", text});
 			}
-			lastWasTypable = true;
+            lastWasTypable = true;
 		} else {
-			lastWasTypable = false;
+            lastWasTypable = false;
 
-			const abbr = abbreviationsRev.get(str[idx]);
+			const abbr = abbreviationsRev.get(character);
 			if (abbr) {
 				helpItems.push({kind: "abbr", abbr: abbr});
 			} else {
-				helpItems.push({kind: "unknown", codepoint: str[idx]});
-			}
+				helpItems.push({kind: "unknown", character: character});
+            }
 		}
-	}
-	return helpItems;
+    }
+    
+    return helpItems;
 }
 
+/**
+ * Format help items of `computeTypingInfo()` to an HTML <ul id="typeResults">...</ul> element.
+ * @param helpItems See return type of `computeTypingInfo()`.
+ * 
+ * @returns An HTML <ul> DOM element to be appended somewhere.
+ */
 function formatTypingInfo(helpItems) {
     const formattedHelpInfo = document.createElement("ul");
     formattedHelpInfo.setAttribute("id", "typeResults")
@@ -61,7 +89,7 @@ function formatTypingInfo(helpItems) {
             outerNode.appendChild(codeNode);
 		} else {
 			outerNode.appendChild(document.createTextNode("copy-paste `"));
-            codeNode.appendChild(document.createTextNode(helpItem.codepoint));
+            codeNode.appendChild(document.createTextNode(helpItem.character));
             outerNode.appendChild(codeNode);
             outerNode.appendChild(document.createTextNode("`"));
 		}
