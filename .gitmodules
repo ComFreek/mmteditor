@@ -1,0 +1,4 @@
+[submodule "CodeMirror"]
+	path = codemirror
+	url = https://github.com/ComFreek/CodeMirror.git
+	branch = feature.mmt
