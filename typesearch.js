@@ -12,15 +12,17 @@ function computeTypingInfo(str) {
 	let lastWasTypable = false;
 
 	for (let idx = 0; idx < str.length; idx++) {
-		const codepoint = str.codePointAt(idx);
-		if (codepoint >= 32 && codepoint <= 126) {
+        const codepoint = str.codePointAt(idx);
+        // either tab (codepoint 9) or typable ASCII character
+		if (codepoint == 9 || (codepoint >= 32 && codepoint <= 126)) {
+            const text = codepoint == 9 ? "<tab>" : str[idx];
 			if (lastWasTypable) {
 				const lastHelpItem = helpItems.pop();
-				lastHelpItem.text += str[idx];
+				lastHelpItem.text += text;
 
 				helpItems.push(lastHelpItem);
 			} else {
-				helpItems.push({kind: "typable", text: str[idx]});
+				helpItems.push({kind: "typable", text});
 			}
 			lastWasTypable = true;
 		} else {
@@ -43,22 +45,24 @@ function formatTypingInfo(helpItems) {
 
 	const formattedHelpItems = helpItems.map(helpItem => {
 		const outerNode = document.createElement("li");
-		const textNode = document.createElement("code");
+        const codeNode = document.createElement("code");
+
+        codeNode.setAttribute("style", "white-space: pre");
 
 		if (helpItem.kind === "typable") {
 			outerNode.appendChild(document.createTextNode("type `"));
-            textNode.appendChild(document.createTextNode(helpItem.text));
-            outerNode.appendChild(textNode);
+            codeNode.appendChild(document.createTextNode(helpItem.text));
+            outerNode.appendChild(codeNode);
             outerNode.appendChild(document.createTextNode("`"));
 		} else if (helpItem.kind === "abbr") {
             outerNode.appendChild(document.createTextNode("use "));
-            textNode.appendChild(document.createTextNode(helpItem.abbr));
+            codeNode.appendChild(document.createTextNode(helpItem.abbr));
 
-            outerNode.appendChild(textNode);
+            outerNode.appendChild(codeNode);
 		} else {
 			outerNode.appendChild(document.createTextNode("copy-paste `"));
-            textNode.appendChild(document.createTextNode(helpItem.codepoint));
-            outerNode.appendChild(textNode);
+            codeNode.appendChild(document.createTextNode(helpItem.codepoint));
+            outerNode.appendChild(codeNode);
             outerNode.appendChild(document.createTextNode("`"));
 		}
 		return outerNode;
