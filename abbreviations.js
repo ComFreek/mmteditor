@@ -7,6 +7,15 @@ function loadAbbreviations() {
 	);
 }
 
+function loadAbbreviationReverseMap() {
+	return new Map(
+		getRawAbbreviations()
+			.split('\n')
+			.filter(line => line != '' && !line.startsWith('//'))
+			.map(line => line.split('|').reverse())
+	);
+}
+
 function getRawAbbreviations() {
 	return `jMD|❚
 jDD|❙
