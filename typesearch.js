@@ -1,11 +1,16 @@
-const typeSearch = document.getElementById("typeSearch");
+import { abbreviationsRevMap } from "./abbreviations.js";
 
-typeSearch.addEventListener("input", () => {
-    const newTypeResults = formatTypingInfo(computeTypingInfo(typeSearch.value));
+export function init(searchElement, resultsElementID) {
+	searchElement.addEventListener("input", () => {
+    	const newTypeResults = formatTypingInfo(computeTypingInfo(
+			typeSearch.value,
+			abbreviationsRevMap
+		), resultsElementID);
 
-    const oldTypeResults = document.getElementById("typeResults");
-    oldTypeResults.parentNode.replaceChild(newTypeResults, oldTypeResults);
-});
+    	const oldTypeResults = document.getElementById(resultsElementID);
+	    oldTypeResults.parentNode.replaceChild(newTypeResults, oldTypeResults);
+	});
+}
 
 /**
  * Compute information on how a human would type a string using their keyboard
@@ -62,14 +67,15 @@ function computeTypingInfo(str, abbreviationsRev) {
 }
 
 /**
- * Format help items of `computeTypingInfo()` to an HTML <ul id="typeResults">...</ul> element.
+ * Format help items of `computeTypingInfo()` to an HTML <ul id="idOfElement"">...</ul> element.
  * @param helpItems See return type of `computeTypingInfo()`.
+ * @param idOfElement ID to give the resulting <ul> element.
  * 
  * @returns An HTML <ul> DOM element to be appended somewhere.
  */
-function formatTypingInfo(helpItems) {
+function formatTypingInfo(helpItems, idOfElement) {
     const formattedHelpInfo = document.createElement("ul");
-    formattedHelpInfo.setAttribute("id", "typeResults")
+    formattedHelpInfo.setAttribute("id", idOfElement)
 
 	const formattedHelpItems = helpItems.map(helpItem => {
 		const outerNode = document.createElement("li");

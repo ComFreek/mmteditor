@@ -1,15 +1,18 @@
-const abbrSearch = document.getElementById("abbrSearch");
-const abbrLookupResults = document.getElementById("abbrLookupResults");
+import { abbreviationsMap } from "./abbreviations.js";
 
-abbrSearch.addEventListener("input", updateAbbreviationLookupResults.bind(null));
-updateAbbreviationLookupResults();
+export function init(searchElement, resultsElement) {
+	const update = () => updateAbbreviationLookupResults(resultsElement);
 
-function updateAbbreviationLookupResults() {
+	searchElement.addEventListener("input", update);
+	update();
+}
+
+function updateAbbreviationLookupResults(resultsElement) {
 	// clear all previous lookup results
 	//
 	// might be pretty slow, see also
 	// https://stackoverflow.com/questions/3955229/remove-all-child-elements-of-a-dom-node-in-javascript
-	abbrLookupResults.innerHTML = "";
+	resultsElement.innerHTML = "";
 
 
 	for (const [abbrKey, abbrValue] of fuzzyFindAbbreviations(abbrSearch.value)) {
@@ -24,7 +27,7 @@ function fuzzyFindAbbreviations(str) {
 
 	const matches = [];
 
-	for (const [abbrKey, abbrValue] of abbreviations.entries()) {
+	for (const [abbrKey, abbrValue] of abbreviationsMap.entries()) {
 		if (abbrKey.toLowerCase().includes(str) || abbrValue.toLowerCase().includes(str)) {
 			matches.push([abbrKey, abbrValue]);
 		}

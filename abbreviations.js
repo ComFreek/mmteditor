@@ -1,20 +1,16 @@
-function loadAbbreviations() {
-	return new Map(
-		getRawAbbreviations()
-			.split('\n')
-			.filter(line => line != '' && !line.startsWith('//'))
-			.map(line => line.split('|'))
-	);
-}
+export const abbreviationsMap = new Map(
+	getRawAbbreviations()
+		.split('\n')
+		.filter(line => line != '' && !line.startsWith('//'))
+		.map(line => line.split('|'))
+);
 
-function loadAbbreviationReverseMap() {
-	return new Map(
-		getRawAbbreviations()
-			.split('\n')
-			.filter(line => line != '' && !line.startsWith('//'))
-			.map(line => line.split('|').reverse())
-	);
-}
+export const abbreviationsRevMap = new Map(
+	getRawAbbreviations()
+		.split('\n')
+		.filter(line => line != '' && !line.startsWith('//'))
+		.map(line => line.split('|').reverse())
+);
 
 function getRawAbbreviations() {
 	return `jMD|❚

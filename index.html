@@ -63,13 +63,20 @@ view v : ?S -> ?T =
 	<ul id="abbrLookupResults"></ul>
 </p>
 
-<script src="abbreviations.js"></script>
-<script>
-	const abbreviations = loadAbbreviations();
-	const abbreviationsRev = loadAbbreviationReverseMap();
+<script type="module">
+	import { init as initTypeSearch } from "./typesearch.js";
+	import { init as initAbbrSearch } from "./abbrsearch.js";
+
+	initTypeSearch(
+		document.getElementById("typeSearch"),
+		"typeResults"
+	);
+
+	initAbbrSearch(
+		document.getElementById("abbrSearch"),
+		document.getElementById("abbrLookupResults")
+	);
 </script>
-<script src="typesearch.js"></script>
-<script src="abbrsearch.js"></script>
 <script>
 const Pos = CodeMirror.Pos;
 
