@@ -1,25 +1,18 @@
 <!doctype html>
 
 <title>MMT OnlineTools</title>
-<meta charset="utf-8"/>
+<meta charset="utf-8" />
 
 <!-- vvv update the version here if you update the ../exports/codemirror Git submodule -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.css">
 <link rel="stylesheet" href="codemirror/theme/dracula.css">
 <link rel="stylesheet" href="codemirror/addon/hint/show-hint.css">
 
-<!-- vvv update the version here if you update the ../exports/codemirror Git submodule -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.js"></script>
-<script src="codemirror/addon/hint/show-hint.js"></script>
-
-<script src="codemirror/addon/mode/advanced.js"></script>
-<script src="codemirror/mode/mmt/mmt.js"></script>
-
 <article>
-<h1>MMT OnlineTools (<a href="https://github.com/ComFreek/mmteditor">github.com/ComFreek/mmteditor</a>)</h1>
+	<h1>MMT OnlineTools (<a href="https://github.com/ComFreek/mmteditor">github.com/ComFreek/mmteditor</a>)</h1>
 
-<h2>MMT QuickEditor</h2>
-<form><textarea id="code">namespace http://example.com/mmt-demo ❚
+	<h2>MMT QuickEditor</h2>
+	<form><textarea id="code">namespace http://example.com/mmt-demo ❚
 
 import lfx http://gl.mathhub.info/MMT/LFX/TypedHierarchy ❚
 import finite http://gl.mathhub.info/MMT/LFX/Finite ❚
@@ -41,28 +34,36 @@ view v : ?S -> ?T =
 	c = d ❙
 ❚</textarea></form>
 
-<p>Type "j" and press <strong>ctrl-space</strong> to activate autocompletion for Unicode characters.</p>
+	<p>Type "j" and press <strong>ctrl-space</strong> to activate autocompletion for Unicode characters.</p>
 
-<h2>How do I type X?</h2>
-<p>
-	Got some line of MMT code with Unicode characters you don't know how to type?<br>
-	<input type="text" id="typeSearch" size="40" />
-</p>
+	<h2>How do I type X?</h2>
+	<p>
+		Got some line of MMT code with Unicode characters you don't know how to type?<br>
+		<input type="text" id="typeSearch" size="40" />
+	</p>
 
-<p>
+	<p>
 	<ul id="typeResults"></ul>
-</p>
+	</p>
 
-<h2>Abbreviation Search (forward & reverse lookup)</h2>
-<p>
-	Enter any (substring) of an abbreviation or Unicode character:<br>
-	<input type="text" id="abbrSearch" size="20" />
-</p>
+	<h2>Abbreviation Search (forward & reverse lookup)</h2>
+	<p>
+		Enter any (substring) of an abbreviation or Unicode character:<br>
+		<input type="text" id="abbrSearch" size="20" />
+	</p>
 
-<p>
+	<p>
 	<ul id="abbrLookupResults"></ul>
-</p>
+	</p>
 
+</article>
+
+<!-- vvv update the version here if you update the ../exports/codemirror Git submodule -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.js"></script>
+<script src="codemirror/addon/hint/show-hint.js"></script>
+
+<script src="codemirror/addon/mode/advanced.js"></script>
+<script src="codemirror/mode/mmt/mmt.js"></script>
 <script type="module">
 	import { init as initTypeSearch } from "./typesearch.js";
 	import { init as initAbbrSearch } from "./abbrsearch.js";
@@ -76,60 +77,11 @@ view v : ?S -> ?T =
 		document.getElementById("abbrSearch"),
 		document.getElementById("abbrLookupResults")
 	);
+
+	import { init as initEditor } from "./editor.js";
+	initEditor(document.getElementById("code"));
 </script>
-<script>
-const Pos = CodeMirror.Pos;
-
-function findMatchingAbbreviations(str, cursorLine, tokenEndCh) {
-	console.log(str);
-	str = str.toLowerCase();
-
-	const matches = [];
-
-	for (const [abbrKey, abbrValue] of abbreviations.entries()) {
-		const caseInsensitiveAbbrKey = abbrKey.toLowerCase();
-
-		for (let i = 0; i < abbrKey.length; i++) {
-			if (str.endsWith(caseInsensitiveAbbrKey.slice(0, i + 1))) {
-				matches.push({
-					text: abbrValue,
-					displayText: `${abbrValue}\t\t${abbrKey}`,
-					from: Pos(cursorLine, tokenEndCh - (i + 1)),
-					to: Pos(cursorLine, tokenEndCh)
-				});
-			}
-		}
-	}
-
-	return matches;
-}
-
-CodeMirror.registerHelper("hint", "mmt", function(editor, options) {
-	// Find the token at the cursor
-	var cur = editor.getCursor();
-	console.log(cur);
-	var token = editor.getTokenAt(cur);
-
-	const matchingAbbreviations = findMatchingAbbreviations(token.string, cur.line, token.end);
-	return {
-		list: matchingAbbreviations,
-		from: Pos(cur.line, token.start),
-		to: Pos(cur.line, token.end)
-	};
-});
-
-
-const editor = CodeMirror.fromTextArea(document.getElementById("code"), {
-	mode: "mmt",
-	lineNumbers: true,
-	extraKeys: {"Ctrl-Space": "autocomplete"}
-});
-editor.setOption("theme", "dracula");
-
-
-</script>
-
-</article>
 
 </body>
+
 </html>

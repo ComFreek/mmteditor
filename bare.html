@@ -1,0 +1,57 @@
+<!doctype html>
+<!--
+    This HTML file displays a full-screen CodeMirror editor with MMT syntax highlighting and
+    listens on JavaScript Messages [1] to change the contents of the editor.
+
+    Used by
+      - humans wanting a full-screen experience of MMT syntax highlighting
+      - the DiagramOutputServer of the MMT API whose intent is to syntax-highlight outputs
+        of diagram operator applications. For that, it serves an HTML file that uses an <iframe>
+        to embed (a hosted version of) this HTML file and sends a message with the content
+        it wishes to display.
+
+    [1]: https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
+-->
+
+<title>MMT OnlineTools</title>
+<meta charset="utf-8" />
+
+<!-- vvv update the version here if you update the ../exports/codemirror Git submodule -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.css">
+<link rel="stylesheet" href="codemirror/theme/dracula.css">
+<link rel="stylesheet" href="codemirror/addon/hint/show-hint.css">
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    html, body {
+        height: 100%;
+    }
+    textarea#code {
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+        resize: none;
+    }
+</style>
+
+<textarea id="code"></textarea>
+
+<!-- vvv update the version here if you update the ../exports/codemirror Git submodule -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.js"></script>
+<script src="codemirror/addon/hint/show-hint.js"></script>
+
+<script src="codemirror/addon/mode/advanced.js"></script>
+<script src="codemirror/mode/mmt/mmt.js"></script>
+<script type="module">
+    import { init as initEditor } from "./editor.js";
+    initEditor(document.getElementById("code"));
+</script>
+
+</article>
+
+</body>
+
+</html>
