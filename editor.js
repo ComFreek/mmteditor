@@ -1,3 +1,5 @@
+import { abbreviationsMap as abbreviations } from "./abbreviations.js";
+
 const Pos = CodeMirror.Pos;
 
 function findMatchingAbbreviations(str, cursorLine, tokenEndCh) {
