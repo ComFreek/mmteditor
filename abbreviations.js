@@ -1,19 +1,34 @@
-export const abbreviationsMap = new Map(
-	getRawAbbreviations()
-		.split('\n')
-		.filter(line => line != '' && !line.startsWith('//'))
-		.map(line => line.split('|'))
-);
+export const abbreviationsMap = new Map(getAbbreviations());
+export const abbreviationsRevMap = new Map(getAbbreviations().map(abbr => abbr.reverse()));
 
-export const abbreviationsRevMap = new Map(
-	getRawAbbreviations()
-		.split('\n')
+function getAbbreviations() {
+	const a =  getRawAbbreviations()
+		.split(/(?:\r|\n)+/)
+		.map(line => line.trim())
 		.filter(line => line != '' && !line.startsWith('//'))
-		.map(line => line.split('|').reverse())
-);
+
+		// Lines follow the syntax "abbreviation|replacement" where
+		// replacement must not contain "|" and the "|" noted there
+		// is the last one occuring in the overall line.
+		// (This is important because `abbreviation` may also contain "|"!)
+		.map(line => [line, line.lastIndexOf("|")])
+		.filter(([,sepIndex]) => sepIndex !== -1)
+		.map(([line, sepIndex]) => {
+			return [
+				line.substring(0, sepIndex),
+				line.substring(sepIndex + 1)
+			];
+		});
+		return a;
+}
 
 function getRawAbbreviations() {
-	return `jMD|❚
+	// The raw abbreviation data has been copied from https://github.com/UniFormal/MMT/blob/devel/src/mmt-api/resources/unicode/unicode-latex-map.
+	// Be sure to regularly update from that file!
+	//
+	// Last update: 2021-01-10.
+	return `
+jMD|❚
 jDD|❙
 jOD|❘
 jsharp|♯
@@ -386,6 +401,51 @@ jperp|⟂
 jparallel|∥
 jnparallel|∦
 jURI|☞
+jsupera|ᵃ
+jsuperb|ᵇ
+jsuperc|ᶜ
+jsuperd|ᵈ
+jsupere|ᵉ
+jsuperf|ᶠ
+jsuperg|ᵍ
+jsuperh|ʰ
+jsuperi|ⁱ
+jsuperj|ʲ
+jsuperk|ᵏ
+jsuperl|ˡ
+jsuperm|ᵐ
+jsupern|ⁿ
+jsupero|ᵒ
+jsuperp|ᵖ
+jsuperr|ʳ
+jsupers|ˢ
+jsupert|ᵗ
+jsuperu|ᵘ
+jsuperv|ᵛ
+jsuperw|ʷ
+jsuperx|ˣ
+jsupery|ʸ
+jsuperz|ᶻ
+jsuperA|ᴬ
+jsuperB|ᴮ
+jsuperD|ᴰ
+jsuperE|ᴱ
+jsuperG|ᴳ
+jsuperH|ᴴ
+jsuperI|ᴵ
+jsuperJ|ᴶ
+jsuperK|ᴷ
+jsuperL|ᴸ
+jsuperM|ᴹ
+jsuperN|ᴺ
+jsuperO|ᴼ
+jsuperP|ᴾ
+jsuperR|ᴿ
+jsuperT|ᵀ
+jsuperU|ᵁ
+jsuperV|ⱽ
+jsuperW|ᵂ
+jVbar|⫫
 // some of these have length 2 in Java and won't work everywhere
 jU|𝒰
 jcalA|𝒜

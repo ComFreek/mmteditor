@@ -33,6 +33,11 @@ See in action at <https://comfreek.github.io/mmteditor/>.
 
 ## Development Notes
 
+### Updating MMT's abbreviation map
+
+Regularly update the raw abbreviation data in `abbreviations.js` by copying everything from <https://github.com/UniFormal/MMT/blob/devel/src/mmt-api/resources/unicode/unicode-latex-map>.
+Detailed instructions can be found in `abbreviations.js`.
+
 ### Updating CodeMirror
 
 Suppose CodeMirror releases a new version X.Y.Z.

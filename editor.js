@@ -38,9 +38,8 @@ function findMatchingAbbreviations(str, cursorLine, tokenEndCh) {
 export function init(textarea) {
     CodeMirror.registerHelper("hint", "mmt", function(editor, options) {
     	// Find the token at the cursor
-    	let cur = editor.getCursor();
-    	console.log(cur);
-    	let token = editor.getTokenAt(cur);
+    	const cur = editor.getCursor();
+    	const token = editor.getTokenAt(cur);
 
     	const matchingAbbreviations = findMatchingAbbreviations(token.string, cur.line, token.end);
     	return {
