@@ -36,6 +36,7 @@ function findMatchingAbbreviations(str, cursorLine, tokenEndCh) {
  * @param {HTMLTextAreaElement} textarea The <textarea> DOM element into which to create the CodeMirror editor.
  */
 export function init(textarea) {
+	// Register MMT autocompletion
     CodeMirror.registerHelper("hint", "mmt", function(editor, options) {
     	// Find the token at the cursor
     	const cur = editor.getCursor();
@@ -55,7 +56,19 @@ export function init(textarea) {
         extraKeys: {"Ctrl-Space": "autocomplete"}
     });
     editor.setSize("100%", "100%");
-    editor.setOption("theme", "dracula");
+	editor.setOption("theme", "dracula");
+	
+	// Make autocompletion to be invoked on keyup (and not just after Ctr-Space)
+	//
+	// Source: <https://stackoverflow.com/a/33021864>
+	// Author: Sasha <https://stackoverflow.com/users/543591/sasha>
+	// License: CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0/>
+	editor.on("keyup", (cm, event) => {
+		if (!cm.state.completionActive && /*Enables keyboard navigation in autocomplete list*/
+			event.keyCode != 13) {        /*Enter - do not open autocomplete list just after item has been selected in it*/ 
+			cm.showHint({completeSingle: false});
+        }
+    });
 
     window.addEventListener("message", event => {
         const data = JSON.parse(event.data);
