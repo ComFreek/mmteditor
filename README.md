@@ -40,7 +40,8 @@ Detailed instructions can be found in `abbreviations.js`.
 
 ### Updating CodeMirror
 
-Suppose CodeMirror releases a new version X.Y.Z.
+Suppose CodeMirror releases a new version X.Y.Z. Hopefully, [Renovate](https://github.com/renovatebot/renovate) already filed a pull request.
+Then do:
 
 1. Hopefully the [codemirror/CodeMirror repository on GitHub](https://github.com/codemirror/CodeMirror) contains a corresponding tag `X.Y.Z`.
 2. From within this repository, `cd codemirror` and do:
@@ -51,8 +52,9 @@ Suppose CodeMirror releases a new version X.Y.Z.
    4. `git merge X.Y.Z`
    5. `git commit -m "..."` (in case of merge conflicts) and `git push origin`
 
-3. From within this repository, open both `index.html` and `bare.html` and update the `<script src="...">` and `<link href="...">` links to CodeMirror resources (update the version encoded in the URI)
+3. In case Renovate filed a pull request, do `git fetch` and `git merge origin/renovate/codemirror-x.y`.
 
-   Probably [Renovate](https://github.com/renovatebot/renovate) already filed a pull request to update these HTML files.
-   If so, do `git fetch`, `git merge origin/renovate/codemirror-x.y` instead of editing the HTML files manually.
+   Confirm that in both files `index.html` and `bare.html`, the URIs referencing CodeMirror resources (`<script src="...">` and `<link href="...">`) really contain the updated version.
+   If not or if Renovate did not file a pull request at all, update these versions in the URIs manually.
+
 4. `git add --all`, `git commit -m "Update CodeMirror to X.Y.Z"`, `git push`
