@@ -93,6 +93,10 @@ jupdownarrow|↕
 jUparrow|⇑
 jDownarrow|⇓
 jUpdownarrow|⇕
+jupfish|⥾
+jdownfish|⥿
+jleftfish|⥼
+jrightfish|⥽
 jcontra|↯
 jcheck|✓
 jast|∗
@@ -241,6 +245,8 @@ jdiamond|⋄
 jes|∅
 jemptyset|∅
 jaleph|א
+jbet|ב
+jgimel|ג
 jinfty|∞
 jsum|∑
 jprod|∏
@@ -250,6 +256,7 @@ jcomp|∁
 jcomplement|∁
 jsm|∖
 jsetminus|∖
+jproportion|∷
 jcolon|∶
 jzcolon|⦂
 jcoloneq|≔
@@ -499,5 +506,6 @@ jbbV|𝕍
 jbbW|𝕎
 jbbX|𝕏
 jbbY|𝕐
-jbbZ|ℤ`;
+jbbZ|ℤ
+jturnedampersand|⅋`;
 }
