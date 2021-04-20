@@ -36,7 +36,10 @@ See in action at <https://comfreek.github.io/mmteditor/>.
 ### Testing locally
 
 1. Get an HTTP server, e.g. [*http-server* from NPM](https://www.npmjs.com/package/http-server): `npm i http-server -g`.
-2. Go to <http://127.0.0.1:8080/index.html> and <http://127.0.0.1:8080/bare.html> and test things manually (type random (in)valid MMT syntax, test autocomplete).
+2. Run the HTTP server, e.g. `http-server .`.
+3. Go to <http://127.0.0.1:8080/index.html> and <http://127.0.0.1:8080/bare.html> and test things manually (type random (in)valid MMT syntax, test autocomplete).
+   
+   It is strongly recommended to open the developer tools in your browser and deactivate caching in the network tab.
 
 ### Updating MMT's abbreviation map
 
@@ -62,6 +65,6 @@ Then do:
    Confirm that in both files `index.html` and `bare.html`, the URIs referencing CodeMirror resources (`<script src="...">` and `<link href="...">`) really contain the updated version.
    If not or if Renovate did not file a pull request at all, update these versions in the URIs manually.
 
-4. Test whether things work locally
+4. Test whether things work locally (see above under *Testing locally*).
 
 5. `git add --all`, `git commit -m "Update CodeMirror to X.Y.Z"`, `git push`
